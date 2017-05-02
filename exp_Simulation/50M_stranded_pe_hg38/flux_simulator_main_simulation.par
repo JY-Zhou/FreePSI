@@ -1,0 +1,36 @@
+REF_FILE_NAME ../../data_RefSeq_hg38/annotation/transcriptome_cleaned/hg38_refGene_cleaned.gtf
+GEN_DIR ../../data_RefSeq_hg38/genome
+
+TMP_DIR flux_simulator_tmp
+PRO_FILE_NAME flux_simulator_main_expression.pro
+SEQ_FILE_NAME main_reads.bed
+
+### Expression ###
+NB_MOLECULES 5000000
+TSS_MEAN 25
+POLYA_SCALE NaN
+POLYA_SHAPE NaN
+
+### Reverse Transcription ###
+RTRANSCRIPTION YES
+RT_PRIMER RH
+RT_MIN 500
+RT_MAX 5500
+
+### Fragmentation ###
+FRAG_SUBSTRATE RNA
+FRAG_METHOD UR
+FRAG_UR_ETA NaN
+FRAG_UR_D0 1
+
+### Filtering & Amplification ###
+#GC_MEAN NaN
+#PCR_PROBABILITY 0.05
+
+### Sequencing ###
+READ_NUMBER 50000000
+READ_LENGTH 76
+PAIRED_END YES
+ERR_FILE 76
+FASTA YES
+UNIQUE_IDS YES
