@@ -8,7 +8,7 @@ Note that this is the first alignment-free method in RNA-seq data analysis that 
 An outline of the method is sketched below.
 
 FreePSI takes as the input a reference genome with exon boundary annotation and a set of RNA-seq reads.
-Since a reference transcriptome is not assumed, it uses a weighted directed bipartite graph (called an abundance flow graph) to represent all possible isoforms of a gene and their abundance levels.
+Since a reference transcriptome is not assumed, it uses a weighted directed bipartite graph (called an abundance flow graph) to represent all possible isoforms of a gene and their expression levels.
 In such a graph, each vertex represents an exon boundary and each edge represents either an exon or an exon junction.
 The weight of an edge represents the total relative abundance of all isoforms covering the corresponding exon or junction.
 Obviously, to estimate the PSI value of each exon, it suffices to infer the edge weights in every abundance flow graph.
