@@ -3,11 +3,11 @@
 set -e
 
 # Provide the directory containing Jellyfish (usually named as 'bin')  
-Jellyfish=~/bin/bioinfo
+Jellyfish=
 # Provide the directory containing FreePSI
 # E.g. 
-FreePSI=../bin
-#FreePSI=
+#FreePSI=../bin
+FreePSI=
 
 if [ -z ${Jellyfish} ]; then
     echo "Error: Please modify me to provide the directory containing Jellyfish"
