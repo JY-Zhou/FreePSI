@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "EMAlgorithm.h"
 
 EMAlgorithm::EMAlgorithm(KmerHash& kmerHasher, int nThread): kmerHasher(kmerHasher) {
@@ -432,6 +433,7 @@ void EMAlgorithm::correctInfeasibleVariables() {
         omp_out = omp_out + omp_in) \
 initializer(omp_priv = Eigen::VectorXd::Zero(omp_orig.size()))
 
+//bool DEBUG = false;
 
 void EMAlgorithm::eStep() {
     cout << "+++ E-step ..." << endl;
@@ -441,15 +443,14 @@ void EMAlgorithm::eStep() {
     clock_t st = clock();
     Eigen::VectorXd sumMu = Eigen::VectorXd::Zero(NW);
 
-
     clock_t st1 = clock();
-#ifdef EIGEN_DONT_PARALLELIZE
-#pragma omp parallel for num_threads(nThread) reduction(+:sumMu)
-#endif
+//#ifdef EIGEN_DONT_PARALLELIZE
+//#pragma omp parallel for num_threads(1)
+//#endif
     for(int g = 0; g < NG; g ++) {
-#ifdef EIGEN_DONT_PARALLELIZE
-#pragma omp critical
-#endif
+//#ifdef EIGEN_DONT_PARALLELIZE
+//#pragma omp critical
+//#endif
         {
             if(g > proc) {
                 cout << ">" << flush;
@@ -461,16 +462,23 @@ void EMAlgorithm::eStep() {
             Mu[g].setZero();
             Mu[g].makeCompressed();
             for(Eigen::SparseMatrix<double>::InnerIterator it(X[g], 0); it; ++ it) {
-                Mu[g] += C[g].col(it.row()) * it.value() * Z.coeffRef(g, 0);
+                Mu[g] +=  C[g].col(it.row()) * it.value() * Z.coeffRef(g, 0);
             }
 
             Mu[g].prune(EPS, 0.01);
             Mu[g].makeCompressed();
+        }
+    }
 
+#pragma omp parallel for num_threads(nThread) reduction(+:sumMu)
+    for(int g = 0; g < NG; g ++) {
+        if(isAvaliableZ[g] == 1) {
             sumMu += Mu[g];
         }
     }
     timer[1] += (double)(clock() - st1) / CLOCKS_PER_SEC;
+
+    //if(DEBUG) exit(-1);
         
     clock_t st2 = clock();
     timer[2] += (double)(clock() - st2) / CLOCKS_PER_SEC;
@@ -692,6 +700,8 @@ void EMAlgorithm::work(string chrName) {
         
         clock_t st_EStep = clock();
         time(&st);
+
+        //if(it == 4) DEBUG = true;
 
         eStep();
 

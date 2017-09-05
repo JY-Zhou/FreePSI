@@ -5,9 +5,9 @@ import json
 import numpy as np
 import scipy as scp
 import scipy.stats as stats
+import scipy.stats.mstats as mstats
 from sklearn import metrics
 
-TPMFILTER = 10
 
 def filter(i):
     if len(truePsi[i]) < 40:
@@ -16,12 +16,14 @@ def filter(i):
     return False
 
 def statFilter():
-    print("+++ Filter: true TPM >= " + str(TPMFILTER))
+    #print("+++ Filter: true TPM >= " + str(TPMFILTER))
+    print(TPMFILTER, end='\t')
     reserveGene = 0
     for i in range(len(estPsi)):
         if filter(i):
             reserveGene += 1
-    print('+++ # genes passed filter = \t' + str(reserveGene))
+    #print('+++ # genes passed filter = \t' + str(reserveGene))
+    print(reserveGene, end='\t')
 
 def globalRSME():
     estFlatPsi = []
@@ -48,8 +50,12 @@ def globalCorrelation():
         if filter(i):
             estFlatPsi.extend(estPsi[i])
             trueFlatPsi.extend(truePsi[i])
-    print('--- Global correlation = ', end = '\t')
-    print(stats.pearsonr(trueFlatPsi, estFlatPsi)[0])
+    #print('--- Global Pearson correlation = ', end = '\t')
+    #print(stats.pearsonr(trueFlatPsi, estFlatPsi)[0])
+    #print('--- Global Spearman correlation = ', end = '\t')
+    #print(stats.spearmanr(trueFlatPsi, estFlatPsi)[0])
+    print(stats.pearsonr(trueFlatPsi, estFlatPsi)[0], end='\t')
+    print(stats.spearmanr(trueFlatPsi, estFlatPsi)[0], end='\t')
 
 def localCorrelationMean():
     cor = []
@@ -125,32 +131,31 @@ nargv = 1
 truePsiPath = sys.argv[nargv];nargv += 1
 trueTpmPath = sys.argv[nargv];nargv += 1
 estPsiPath = sys.argv[nargv];nargv += 1
-estTpmPath = sys.argv[nargv];nargv += 1
+#estTpmPath = sys.argv[nargv];nargv += 1
 outputPath = sys.argv[nargv];nargv += 1
 
 
 truePsiFile = open(truePsiPath, 'r')
 trueTpmFile = open(trueTpmPath, 'r')
 estPsiFile = open(estPsiPath, 'r')
-estTpmFile = open(estTpmPath, 'r')
+#estTpmFile = open(estTpmPath, 'r')
 outputFile = open(outputPath, 'w')
+
 
 truePsi = json.load(truePsiFile)
 trueTpm = json.load(trueTpmFile)
 estPsi = json.load(estPsiFile)
-estTpm = json.load(estTpmFile)
+#estTpm = json.load(estTpmFile)
 sys.stdout = outputFile
 
 print("********** " + outputPath)
-statFilter()
-print("======")
-globalRSME()
-#localRSMEMean()
-print("======")
-globalCorrelation()
-#localCorrelationMean()
-print("======")
-#splicedCorrelation()
-#print("======")
-
-print("\n")
+print("TPM\t# Gene\tPearson\t\tSpearman")
+for TPMFILTER in [10, 5, 2, 1, 0]:
+    statFilter()
+    #globalRSME()
+    #localRSMEMean()
+    globalCorrelation()
+    #localCorrelationMean()
+    #splicedCorrelation()
+    #print("======")
+    print("")

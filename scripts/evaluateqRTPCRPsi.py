@@ -33,8 +33,8 @@ def globalRSME():
             if filter(i, j):
                 estFlatPsi.append(estPsi[i][j])
                 trueFlatPsi.append(truePsi[i][j])
-    print('--- Global RMSE = ', end = '\t')
-    print(np.sqrt(metrics.mean_squared_error(estFlatPsi, trueFlatPsi)))
+    #print('--- Global RMSE = ', end = '\t')
+    print(np.sqrt(metrics.mean_squared_error(estFlatPsi, trueFlatPsi)), end = '\t')
 
 def globalCorrelation():
     estFlatPsi = []
@@ -44,8 +44,10 @@ def globalCorrelation():
             if filter(i, j):
                 estFlatPsi.append(estPsi[i][j])
                 trueFlatPsi.append(truePsi[i][j])
-    print('--- Global correlation = ', end = '\t')
-    print(stats.pearsonr(trueFlatPsi, estFlatPsi)[0])
+    #print('--- Global Pearson correlation = ', end = '\t')
+    print(stats.pearsonr(trueFlatPsi, estFlatPsi)[0], end = '\t')
+    #print('--- Global Spearman correlation = ', end = '\t')
+    print(stats.spearmanr(trueFlatPsi, estFlatPsi)[0], end = '\t')
 
 eps = 1e-6
 
@@ -66,11 +68,11 @@ mask = json.load(maskFile)
 sys.stdout = outputFile
 
 print("********** " + outputPath)
+print("# exon\tRMSE\tPearson\tSpearman")
 statFilter()
-print("======")
+#print("======")
 globalRSME()
-print("======")
+#print("======")
 globalCorrelation()
-print("======")
-
+#print("======")
 print("\n")

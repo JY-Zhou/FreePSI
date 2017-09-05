@@ -3,11 +3,11 @@
 set -e
 
 # Provide the directory containing Jellyfish (usually named as 'bin')  
-Jellyfish=
+Jellyfish=~/bin/bioinfo
 # Provide the directory containing FreePSI
 # E.g. 
-#FreePSI=../bin/
-FreePSI=
+FreePSI=../bin
+#FreePSI=
 
 if [ -z ${Jellyfish} ]; then
     echo "Error: Please modify me to provide the directory containing Jellyfish"
@@ -27,17 +27,25 @@ THREAD=4
 
 set -x
 # Count k-mers in RNA-seq reads using jellyfish
-${Jellyfish}/jellyfish count -m ${K} -s 2G -t ${THREAD} -Q 5 ${READS}/reads_final.1.fastq -o ${READS}/reads.1.jf
+${Jellyfish}/jellyfish count -m ${K} -s 100M -t ${THREAD} -Q 5 ${READS}/reads_final.1.fastq -o ${READS}/reads.1.jf
 ${Jellyfish}/jellyfish dump ${READS}/reads.1.jf -o ${READS}/reads.1.fa
-${Jellyfish}/jellyfish count -m ${K} -s 2G -t ${THREAD} -Q 5 ${READS}/reads_final.2.fastq -o ${READS}/reads.2.jf
+${Jellyfish}/jellyfish count -m ${K} -s 100M -t ${THREAD} -Q 5 ${READS}/reads_final.2.fastq -o ${READS}/reads.2.jf
 ${Jellyfish}/jellyfish dump ${READS}/reads.2.jf -o ${READS}/reads.2.fa
 
 # Produce raw estimates of PSI values using FreePSI
-${FreePSI}/freePSI -k $K -p ${THREAD} \
+#Build
+${FreePSI}/freePSI build\
+    -k $K -p ${THREAD} \
     -g ${GENOME_DIR} \
     -a ${BND_FILE} \
     -1 ${READS}/reads.1.fa \
     -2 ${READS}/reads.2.fa \
+    -o ./hashtable.json
+
+#Quant
+${FreePSI}/freePSI quant\
+    -k $K -p ${THREAD} \
+    -i ./hashtable.json \
     -o .
 
 # Post-process the raw estimates of PSI values

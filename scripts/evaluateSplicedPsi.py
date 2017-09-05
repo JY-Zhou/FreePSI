@@ -7,7 +7,6 @@ import scipy as scp
 import scipy.stats as stats
 from sklearn import metrics
 
-TPMFILTER = 1
 
 def filter(i, j):
     if len(truePsi[i]) < 40:
@@ -26,8 +25,11 @@ def statFilter():
                 add = True
         if add:
             reserveGene += 1
-    print('+++ # spliced genes = \t' + str(reserveGene))
-    print('+++ # spliced exons = \t' + str(reserveExon))
+    #print('+++ # spliced genes = \t' + str(reserveGene))
+    #print('+++ # spliced exons = \t' + str(reserveExon))
+    print(TPMFILTER, end = '\t')
+    print(reserveGene, end = '\t')
+    print(reserveExon, end = '\t')
 
 def globalRSME():
     estFlatPsi = []
@@ -48,8 +50,10 @@ def globalCorrelation():
             if filter(i, j):
                 estFlatPsi.append(estPsi[i][j])
                 trueFlatPsi.append(truePsi[i][j])
-    print('--- Global correlation = ', end = '\t')
-    print(stats.pearsonr(trueFlatPsi, estFlatPsi)[0])
+    #print('--- Global Pearson correlation = ', end = '\t')
+    print(stats.pearsonr(trueFlatPsi, estFlatPsi)[0], end = '\t')
+    #print('--- Global Spearman correlation = ', end = '\t')
+    print(stats.spearmanr(trueFlatPsi, estFlatPsi)[0], end = '\t')
 
 eps = 1e-6
 
@@ -74,10 +78,9 @@ mask = json.load(maskFile)
 sys.stdout = outputFile
 
 print("********** " + outputPath)
-statFilter()
-print("======")
-globalRSME()
-print("======")
-globalCorrelation()
-print("======")
-print("\n")
+print("TPM\t# Gene\t# Exon\tPearson\tSpearman")
+for TPMFILTER in [1]:
+    statFilter()
+    #globalRSME()
+    globalCorrelation()
+    print("")

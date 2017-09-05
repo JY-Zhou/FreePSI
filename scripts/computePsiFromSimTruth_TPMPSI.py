@@ -6,6 +6,8 @@ import sys
 
 print('\n=== %s start... ===' % sys.argv[0])
 
+noexpr = 0.0
+
 nargv = 1
 expPath = sys.argv[1];nargv += 1
 profPath = sys.argv[nargv];nargv += 1
@@ -47,7 +49,7 @@ for txName in NameIndex:
     i = NameIndex[txName]
     tpm = TPMlist[i] / totTPM * 1e6
 
-    if tpm <= 1.0:
+    if tpm <= noexpr:
         continue
 
     isoId = nameMap[txName]

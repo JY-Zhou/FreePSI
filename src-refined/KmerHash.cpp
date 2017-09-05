@@ -416,6 +416,7 @@ void KmerHash::buildKmerTable(string genomePath) {
             }
             genomeFile.close();
             chrId ++;
+            
         }
 
         string strand = geneStrand[g];

@@ -121,7 +121,6 @@ nameMapPath = sys.argv[nargv];nargv += 1
 truePsiPath = sys.argv[nargv];nargv += 1
 trueTpmPath = sys.argv[nargv];nargv += 1
 estPsiPath = sys.argv[nargv];nargv += 1
-estTpmPath = sys.argv[nargv];nargv += 1
 outputPath = sys.argv[nargv];nargv += 1
 
 geneFamilyFile = open(geneFamilyPath, 'r')
@@ -131,14 +130,12 @@ nameMapFile = open(nameMapPath, 'r')
 truePsiFile = open(truePsiPath, 'r')
 trueTpmFile = open(trueTpmPath, 'r')
 estPsiFile = open(estPsiPath, 'r')
-estTpmFile = open(estTpmPath, 'r')
 outputFile = open(outputPath, 'w')
 
 nameMap = json.load(nameMapFile)
 truePsi = json.load(truePsiFile)
 trueTpm = json.load(trueTpmFile)
 estPsi = json.load(estPsiFile)
-estTpm = json.load(estTpmFile)
 
 readcov = []
 multicov = []
