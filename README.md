@@ -24,12 +24,15 @@ Please run the shell script `run_FreePSI.sh` in the folder `example` for a try.
 ### Main procedure
 #### K-mer hash table construction
 Description:
+
   The `build` command builds the k-mer hash table from a reference genome and loads the k-mer counts of RNA-seq reads.
 
 Usage:
+
   `freePSI build -g <GENOME_DIR> -a <EXON_BND_ANNOT> [-r <KMER_COUNT> | -1 <KMER_COUNT> -2 <KMER_COUNT>] -o <HASHTABLE> [options..]`
 
 Options:
+
   `-g <GENOME_DIR>`                  The directory containing the reference genome of each chromosome (.fasta format)
   
   `-a <EXON_BND_ANNOT>`              The annotation of exon boundary (.bed format)
@@ -48,12 +51,15 @@ Options:
 
 #### PSI estimation
 Description:
+
   The `quant` command quantifies the PSI values.
 
 Usage:
+
   `freePSI quant -i <INDEX> -o <OUTPUT>`
 
 Options:
+
   `-i <HASHTABLE>`                   The k-mer hash table (.json format)
   
   `-o <OUTPUT>`                      The result of PSI values (.json format)
