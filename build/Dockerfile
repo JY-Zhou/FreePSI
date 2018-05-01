@@ -1,4 +1,4 @@
-FROM centos:6
+FROM centos:7
 
 RUN set -x
 RUN yum install -y --quiet wget git
@@ -20,3 +20,5 @@ RUN tar xjf 3.2.9.tar.bz2
 ENV EIGEN_ROOT $(pwd)/eigen-eigen-dc6cfdf9bcec
 
 RUN git clone https://github.com/mdshw5/FreePSI.git
+RUN cd FreePSI/src-refined
+RUN make
