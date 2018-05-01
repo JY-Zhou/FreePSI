@@ -6,7 +6,7 @@ psiFile = open(sys.argv[2], 'r')
 summaryFile = open(sys.argv[3], 'w')
 
 header = "Chromosome\tStrand\tExon starting site\tExon ending site\tPSI"
-print(header, file = summaryFile)
+print(header, file=summaryFile)
 psi = json.load(psiFile)
 k = 0
 for line in bedFile:
@@ -22,5 +22,5 @@ for line in bedFile:
         summary += str(int(substr[1]) + int(exSt[i])) + '\t'
         summary += str(int(substr[1]) + int(exSt[i]) + int(exLen[i])) + '\t'
         summary += str(psi[k][i])
-        print(summary, file = summaryFile)
+        print(summary, file=summaryFile)
     k += 1
