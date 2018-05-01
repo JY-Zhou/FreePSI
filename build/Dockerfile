@@ -4,9 +4,6 @@ RUN set -x
 RUN yum install -y --quiet wget git
 RUN yum groupinstall -y --quiet 'Development Tools'
 
-RUN wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-RUN rpm -i --quiet epel-release-6-8.noarch.rpm
-
 RUN wget https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.gz
 RUN tar xzf boost_1_61_0.tar.gz
 RUN cd boost_1_61_0
