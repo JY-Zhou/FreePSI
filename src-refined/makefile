@@ -33,7 +33,6 @@ KmerHash.o: KmerHash.cpp KmerHash.h
 clean:
 	rm -f ${objects} freePSI ../freePSI
 
+.PHONY: install
 install:
-	cp freePSI /usr/local/bin
-	cp freePSI-postProc.py /usr/local/bin
-	cp freePSI-summary.py /usr/local/bin
+	install -m 555 freePSI freePSI-postProc.py freePSI-summary.py /usr/local/bin
