@@ -21,7 +21,6 @@
 #include <Eigen/SparseQR>
 #include <Eigen/SparseCholesky>
 #include <Eigen/IterativeLinearSolvers>
-#include <Eigen/PardisoSupport>
 
 #include "EMAlgorithm.h"
 
@@ -54,7 +53,7 @@ class ConjugateGradientProjection{
 
         ConjugateGradientProjection(EMAlgorithm&, int);
         ~ConjugateGradientProjection();
-        
+
         Eigen::MatrixXd optimizeQ(double, int);
 
         void initOptimization();
