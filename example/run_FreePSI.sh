@@ -32,12 +32,12 @@ freePSI quant\
     -o .
 
 # Post-process the raw estimates of PSI values
-python3 freePSI-postProc.py \
+freePSI-postProc.py \
     ./psi_freePSI_raw.json \
     ./psi_freePSI.json
 
 # Summarize the PSI values into a readable file
-python3 freePSI-summary.py \
+freePSI-summary.py \
     ./annotation/hg38_refGene_exonBoundary_chr21.bed \
     ./psi_freePSI.json \
     ./psi_freePSI.summary

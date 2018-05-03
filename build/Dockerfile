@@ -4,39 +4,45 @@ RUN set -x
 RUN yum install -y --quiet wget git
 RUN yum groupinstall -y --quiet 'Development Tools'
 
-RUN curl https://ftp.gnu.org/gnu/gcc/gcc-5.4.0/gcc-5.4.0.tar.bz2 -O
-RUN tar xfj gcc-5.4.0.tar.bz2
-RUN yum install -y --quiet gmp-devel mpfr-devel libmpc-devel
-RUN mkdir gcc-5.4.0-build
-WORKDIR gcc-5.4.0-build
-RUN ../gcc-5.4.0/configure --enable-languages=c,c++ --disable-multilib
-RUN make -j$(nproc) && make install
+RUN yum install -y --quiet libmpc-devel mpfr-devel gmp-devel zlib-devel*
+RUN wget -q https://ftp.gnu.org/gnu/gcc/gcc-5.4.0/gcc-5.4.0.tar.gz
+RUN tar xfz gcc-5.4.0.tar.gz
+WORKDIR gcc-5.4.0
+RUN ./configure --with-system-zlib --disable-multilib --enable-languages=c,c++
+RUN make -j $(nproc)
+RUN make install
+
 WORKDIR /
 
-RUN wget -q https://sourceforge.net/projects/boost/files/boost/1.61.0/boost_1_61_0.tar.gz
-RUN tar xzf boost_1_61_0.tar.gz
-WORKDIR boost_1_61_0
+ENV BOOST_VERSION 1.61.0
+ENV BOOST_VERSION_STR boost_1_61_0
+RUN wget -q https://sourceforge.net/projects/boost/files/boost/$BOOST_VERSION/${BOOST_VERSION_STR}.tar.gz
+RUN tar xzf ${BOOST_VERSION_STR}.tar.gz
+WORKDIR $BOOST_VERSION_STR
 RUN sh bootstrap.sh
 RUN ./b2 install -j $(nproc) || true
 ENV BOOST_ROOT $(pwd)
 
 WORKDIR /
-RUN wget -q http://bitbucket.org/eigen/eigen/get/3.2.9.tar.bz2
-RUN tar xjf 3.2.9.tar.bz2
-ENV EIGEN_ROOT $(pwd)/eigen-eigen-dc6cfdf9bcec
+ENV EIGEN_VERSION 3.2.9
+ENV EIGEN_HASH dc6cfdf9bcec
+RUN wget -q http://bitbucket.org/eigen/eigen/get/${EIGEN_VERSION}.tar.bz2
+RUN tar xjf ${EIGEN_VERSION}.tar.bz2
+ENV EIGEN_ROOT $(pwd)/eigen-eigen-${EIGEN_HASH}
 
 ENV PSI_COMMIT=aaf2313aacd8f387efab614c3814f8fa06a87238
 RUN git clone https://github.com/mdshw5/FreePSI.git
 WORKDIR /FreePSI/src-refined
 RUN git pull
 RUN git checkout $PSI_COMMIT
-RUN make -j $(nproc) BOOST_ROOT=/boost_1_61_0 EIGEN_ROOT=/eigen-eigen-dc6cfdf9bcec
+RUN make -j $(nproc) BOOST_ROOT=/${BOOST_VERSION_STR} EIGEN_ROOT=/eigen-eigen-${EIGEN_HASH}
 RUN make install
 
 WORKDIR /
-RUN wget -q https://github.com/gmarcais/Jellyfish/releases/download/v2.2.10/jellyfish-2.2.10.tar.gz
-RUN tar -xzf jellyfish-2.2.10.tar.gz
-WORKDIR jellyfish-2.2.10
+ENV JELLYFISH_VERSION 2.2.6
+RUN wget -q https://github.com/gmarcais/Jellyfish/releases/download/v${JELLYFISH_VERSION}/jellyfish-${JELLYFISH_VERSION}.tar.gz
+RUN tar -xzf jellyfish-${JELLYFISH_VERSION}.tar.gz
+WORKDIR jellyfish-${JELLYFISH_VERSION}
 RUN ./configure
 RUN make -j $(nproc)
 RUN make install
