@@ -7,9 +7,9 @@ sources=freePSI.cpp \
 	EMAlgorithm.cpp EMAlgorithm.h \
 	KmerHash.cpp KmerHash.h
 
-GLOBALPARS=-O3 -std=c++11 -fopenmp -w -m64 -DNDEBUG
+GLOBALPARS=-static -O3 -std=c++11 -fopenmp -w -m64 -DNDEBUG
 
-LNKMKL=-Wl,--no-as-needed -lpthread -lm -ldl
+LNKMKL=-Wl,--no-as-needed -lm -ldl -lpthread
 
 MARCOS=-D EIGEN_DONT_PARALLELIZE
 
