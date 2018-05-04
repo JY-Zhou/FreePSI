@@ -7,25 +7,23 @@ sources=freePSI.cpp \
 	EMAlgorithm.cpp EMAlgorithm.h \
 	KmerHash.cpp KmerHash.h
 
-GLOBALPARS=-std=c++11 -fopenmp -O3 -Wno-unused-result -static
+GLOBALPARS=-std=c++11 -fopenmp -O3 -Wno-unused-result -static -Wl,--no-as-needed
 
-LNKMKL=-Wl,--no-as-needed -fopenmp -lm -lpthread -ldl
-
-MARCOS=-D EIGEN_DONT_PARALLELIZE
+MACROS=-D EIGEN_DONT_PARALLELIZE
 
 freePSI: ${objects}
 	rm -f ../freePSI
-	g++ ${GLOBALPARS} ${LNKMKL} ${objects} -o freePSI
+	g++ ${GLOBALPARS} ${objects} -o freePSI
 
 freePSI.o: ${sources}
-	g++ ${GLOBALPARS} ${MARCOS} -I ${BOOST_ROOT} -I ${EIGEN_ROOT} -c freePSI.cpp
+	g++ ${GLOBALPARS} ${MACROS} -I ${BOOST_ROOT} -I ${EIGEN_ROOT} -c freePSI.cpp
 
 ConjugateGradientProjection.o: ConjugateGradientProjection.cpp ConjugateGradientProjection.h \
     EMAlgorithm.cpp EMAlgorithm.h KmerHash.cpp KmerHash.h
-	g++ ${GLOBALPARS} ${MARCOS} -I ${BOOST_ROOT} -I ${EIGEN_ROOT} -c ConjugateGradientProjection.cpp
+	g++ ${GLOBALPARS} ${MACROS} -I ${BOOST_ROOT} -I ${EIGEN_ROOT} -c ConjugateGradientProjection.cpp
 
 EMAlgorithm.o: EMAlgorithm.cpp EMAlgorithm.h KmerHash.cpp KmerHash.h
-	g++ ${GLOBALPARS} ${MARCOS} -I ${BOOST_ROOT} -I ${EIGEN_ROOT} -c EMAlgorithm.cpp
+	g++ ${GLOBALPARS} ${MACROS} -I ${BOOST_ROOT} -I ${EIGEN_ROOT} -c EMAlgorithm.cpp
 
 KmerHash.o: KmerHash.cpp KmerHash.h
 	g++ ${GLOBALPARS} -I ${BOOST_ROOT} -c KmerHash.cpp
