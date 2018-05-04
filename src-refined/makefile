@@ -9,7 +9,7 @@ sources=freePSI.cpp \
 
 GLOBALPARS=-std=c++11 -fopenmp -O3 -Wno-unused-result -static -Wl,--no-as-needed
 
-MACROS=-D EIGEN_DONT_PARALLELIZE
+#MACROS=-D EIGEN_DONT_PARALLELIZE
 
 freePSI: ${objects}
 	rm -f ../freePSI
