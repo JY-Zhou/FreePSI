@@ -12,6 +12,8 @@ RUN ./configure --with-system-zlib --disable-multilib --enable-languages=c,c++
 RUN make -j $(nproc)
 RUN make install
 
+ENV LD_LIBRARY_PATH "/usr/local/lib64:${LD_LIBRARY_PATH}"
+
 WORKDIR /
 
 ENV BOOST_VERSION 1.61.0
@@ -30,12 +32,14 @@ RUN wget -q http://bitbucket.org/eigen/eigen/get/${EIGEN_VERSION}.tar.bz2
 RUN tar xjf ${EIGEN_VERSION}.tar.bz2
 ENV EIGEN_ROOT $(pwd)/eigen-eigen-${EIGEN_HASH}
 
-ENV PSI_COMMIT=aaf2313aacd8f387efab614c3814f8fa06a87238
+
 RUN git clone https://github.com/mdshw5/FreePSI.git
 WORKDIR /FreePSI/src-refined
+ENV PSI_COMMIT=d6909cf74dd54bcb817f1dcea9bb390e1f5320c3
 RUN git pull
 RUN git checkout $PSI_COMMIT
-RUN make -j $(nproc) BOOST_ROOT=/${BOOST_VERSION_STR} EIGEN_ROOT=/eigen-eigen-${EIGEN_HASH}
+RUN yum install -y --quiet glibc-static
+RUN make -j $(nproc) BOOST_ROOT=/${BOOST_VERSION_STR} EIGEN_ROOT=/eigen-eigen-${EIGEN_HASH} LDFLAGS="-L/usr/local/lib64:/usr/lib64:/lib64:${LD_LIBRARY_PATH}"
 RUN make install
 
 WORKDIR /
@@ -47,9 +51,10 @@ RUN ./configure
 RUN make -j $(nproc)
 RUN make install
 
-RUN yum -y install https://centos7.iuscommunity.org/ius-release.rpm
-RUN yum -y install python36u python36u-pip python36u-devel
+RUN yum install -y --quiet https://centos7.iuscommunity.org/ius-release.rpm
+RUN yum install -y --quiet  python36u python36u-pip python36u-devel
 RUN pip3.6 install numpy scipy
+RUN ln -s /usr/bin/python3.6 /usr/bin/python3
 
 WORKDIR /FreePSI/example
 RUN pwd
