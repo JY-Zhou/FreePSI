@@ -15,6 +15,8 @@ for line in bedFile:
     substr = line.strip().split('\t')
     if int(substr[-3]) != len(psi[k]):
         print('Error: the output doesn\'t match the input!')
+        print(line)
+        print(psi[k])
         exit()
     exSt = substr[-1].split(',')
     exLen = substr[-2].split(',')
