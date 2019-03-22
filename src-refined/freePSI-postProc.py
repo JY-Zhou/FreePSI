@@ -1,3 +1,5 @@
+#! /bin/env python3
+
 import json
 import math
 import numpy as np
@@ -16,29 +18,26 @@ for g in range(len(psi)):
     b = psi[g]
     newPsi[g] = b
     if len(b) > 1:
-        maxb = max(b)
         a = np.array([b]).T
         b_dist = dis.pdist(a)
-        b_link = hac.linkage(b_dist, method='average')
-        for k in range(1, len(a)+1):
+        b_link = hac.linkage(b_dist)
+        for k in range(1, len(a) + 1):
             clust = hac.cut_tree(b_link, k)
-            Mu = []
-            SD = []
+            avgSD = []
+            mu = []
             for i in range(k):
-                data = a[clust == i, ]
-                Mu.append(np.mean(data))
-                SD.append(np.std(data))
-
-            if np.max(SD) < 0.06 or np.mean(SD) < 0.05:
+                mu.append(np.mean(a[clust == i, ]))
+                avgSD.append(np.std(a[clust == i, ]))
+            if np.max(avgSD) < 0.05:
                 for e in range(len(a)):
-                    newPsi[g][e] = Mu[clust[e, 0]]
+                    newPsi[g][e] = mu[clust[e, 0]]
                 maxv = max(newPsi[g])
                 if maxv > 0.05:
                     for e in range(len(a)):
                         newPsi[g][e] /= maxv
                 else:
                     for e in range(len(a)):
-                        newPsi[g][e] /= 5.0 
+                        newPsi[g][e] = 0
                 break
 
-json.dump(newPsi, outFile, indent = 4)
+json.dump(newPsi, outFile, indent=4)
